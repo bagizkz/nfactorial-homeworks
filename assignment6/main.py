@@ -157,6 +157,15 @@ def expercise_20():
     print('Expercise 20 END\n')
 
 
+def expercise_21():
+    print('--Expercise 21:')
+    ex21_text = "racecar"
+    is_palindrome = ex21_text == ex21_text[::-1]
+    ex21_result = "палиндром" if is_palindrome else "не палиндром"
+    print(f'Строка "{ex21_text}" {ex21_result}.')
+    print('Expercise 21 END\n')
+
+
 def main():
     expercise_1()
     expercise_2()
@@ -178,6 +187,8 @@ def main():
     expercise_18()
     expercise_19()
     expercise_20()
+    expercise_21()
+
 
 if __name__ == "__main__":
     main()
