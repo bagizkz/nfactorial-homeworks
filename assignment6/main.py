@@ -170,6 +170,21 @@ def expercise_21():
     print('Expercise 21 END\n')
 
 
+def expercise_22():
+    print('--Expercise 22:')
+    ex22_text1 = "spar"
+    ex22_text2 = "rasp"
+
+    ex22_text1 = ex22_text1.replace(" ", "").lower()
+    ex22_text2 = ex22_text2.replace(" ", "").lower()
+
+    if sorted(ex22_text1) == sorted(ex22_text2):
+        print(f'"{ex22_text1}" и "{ex22_text2}" анаграммама.')
+    else:
+        print(f'"{ex22_text1}" и "{ex22_text2}" не анаграмма.')
+    print('Expercise 22 END')
+
+
 def main():
     expercise_1()
     expercise_2()
@@ -192,6 +207,7 @@ def main():
     expercise_19()
     expercise_20()
     expercise_21()
+    expercise_22()
 
 
 if __name__ == "__main__":
