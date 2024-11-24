@@ -1,5 +1,5 @@
 # тестируем main.py
-from main import calculate
+from calc import calculate
 
 def test_calculate():
     assert calculate(2, 3) == 5, "Ошибка: calculate(2, 3) должно быть 5"
