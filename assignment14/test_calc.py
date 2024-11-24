@@ -1,4 +1,4 @@
-# тестируем main.py
+# тестируем calc.py
 from calc import calculate
 
 def test_calculate():
