@@ -1,5 +1,5 @@
 import math #c 14
-import random # 17
+import random
 
 
 
@@ -9,17 +9,14 @@ Create a Pizza class that could have ingredients added to it. Raise an error if 
 """
 
 
-
 class Pizza:
     def __init__(self):
-        self.ingredients = set()
-    
+        self.ingredients = []
+
     def add_ingredient(self, ingredient):
         if ingredient in self.ingredients:
-            raise ValueError("ingredient уже существует!")
-        self.ingredients.add(ingredient)
-
-
+            raise ValueError(f" '{ingredient}' уже есть")
+        self.ingredients.append(ingredient)
 """
 Exercise 2:
 Create an Elevator class with methods to go up, go down, and get the current floor. The elevator should not be able to go below the ground floor (floor 0).
@@ -49,18 +46,18 @@ Create a class Stack with methods to push, pop, and check if the stack is empty.
 
 class Stack:
     def __init__(self):
-        self.items = []
+        self.stack = []
 
     def push(self, item):
-        self.items.append(item)
+        self.stack.append(item)
 
     def pop(self):
-        if self.is_empty():
+        if not self.stack:
             raise IndexError("stack пуст")
-        return self.items.pop()
+        return self.stack.pop()
 
     def is_empty(self):
-        return len(self.items) == 0
+        return len(self.stack) == 0
 
     
 """
@@ -109,7 +106,9 @@ class Person:
     def birthday(self):
         self.age += 1
 
-        
+
+
+
 """
 Exercise 6:
 Create an Animal base class and a Dog and Cat derived classes. Each animal should have a sound method which returns the sound they make.
@@ -181,8 +180,7 @@ class Student:
         self.name = name
 
 class Course:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self):
         self.students = []
 
     def enroll(self, student):
@@ -212,7 +210,9 @@ class Flight:
         self.destination = new_destination
 
     def delay(self, delay_time):
-        self.departure += delay_time
+        hour, minute = map(int, self.departure.split(":"))
+        hour += delay_time
+        self.departure = f"{hour}:00"
 
 
 """
@@ -292,7 +292,6 @@ class Rectangle:
     def is_square(self):
         return self.height == self.width
 
-
 """
 Exercise 14:
 Design a class Circle with attributes for radius. Implement methods for calculating the area and the circumference of the circle. Handle exceptions for negative radius values.
@@ -310,7 +309,6 @@ class Circle:
 
     def circumference(self):
         return 2 * math.pi * self.radius
-
 
 """
 Exercise 15:
@@ -394,31 +392,23 @@ Create a MusicPlayer class that contains a list of songs and methods to add song
 
 class MusicPlayer:
     def __init__(self):
-        self.songs = []
-        self.current_song_index = 0
+        self.playlist = []
+        self.current_song = None
 
     def add_song(self, song):
-        self.songs.append(song)
+        self.playlist.append(song)
 
     def play_song(self):
-        if not self.songs:
-            print("Нет песен в плейлисте!")
-            return
-        print(f"Сейчас играет: {self.songs[self.current_song_index]}")
+        if self.playlist:
+            self.current_song = self.playlist[0]
 
     def next_song(self):
-        if not self.songs:
-            print("Нет песен в плейлисте!")
-            return
-        self.current_song_index = (self.current_song_index + 1) % len(self.songs)
-        self.play_song()
+        if self.playlist:
+            current_index = self.playlist.index(self.current_song)
+            self.current_song = self.playlist[(current_index + 1) % len(self.playlist)]
 
     def shuffle(self):
-        if not self.songs:
-            print("Нет песен в плейлисте!")
-            return
-        random.shuffle(self.songs)
-        self.current_song_index = 0
+        random.shuffle(self.playlist)
         self.play_song()
 
 
