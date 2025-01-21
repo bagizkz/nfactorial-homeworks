@@ -18,7 +18,7 @@ def index(request: Request):
 
 
 @app.get("/users")
-def index(request: Request):
+def get_users(request: Request):
     sorted_users = sorted(users, key=lambda user: user["id"])
     return templates.TemplateResponse("users/index.html", {"request": request, "users": sorted_users})
 
@@ -27,6 +27,6 @@ def user_detail(request: Request, id: int):
     user = next((u for u in users if u["id"] == id), None)
     if user:
         return templates.TemplateResponse("users/user.html", {"request": request, "user": user})
-    return {"error": "User not found"}
+    return Response("Not found", status_code=404)
 
 # (конец решения)

@@ -18,9 +18,9 @@ def index():
 def get_cars(page: int = 1, limit: int = 10):
     start = (page - 1) * limit
     end = start + limit
-    
+ 
     paginated_cars = cars[start:end]
-    return {"cars": paginated_cars}
+    return paginated_cars  
 
 
 @app.get("/cars/{id}")
@@ -28,10 +28,9 @@ def get_car_by_id(id: int):
     car = next((car for car in cars if car["id"] == id), None)
     
     if car is None:
-        return Response(content="Not found", status_code=404) 
+        return Response("Not found", status_code=404)
     
     return car
 
-    
     
 # (конец решения)
