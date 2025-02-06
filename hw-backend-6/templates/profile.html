@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль</title>
+</head>
+<body>
+    <h1>Профиль</h1>
+    {% if user %}
+        <p>Email: {{ user.email }}</p>
+        <p>Имя: {{ user.name }}</p>
+        <a href="/purchased">Купленные</a><br>
+
+    {% else %}
+        <p>Пользователь не найден.</p>
+    {% endif %}
+    <a href="/flowers">К цветам</a>
+    <br><br>
+    <a href="/">Главная</a>
+</body>
+</html>

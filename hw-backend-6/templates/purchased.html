@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <body>
+        <h1>Купленные цветы</h1>
+        {% if purchased_flowers %}
+            <ul>
+                {% for flower in purchased_flowers %}
+                    <li>{{ flower.name }} - {{ flower.price }} тенге</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Вы еще не купили цветы.</p>
+        {% endif %}
+        <a href="/flowers">К цветам</a>
+        {% if user %}
+        <a href="/profile">Профиль</a>
+        {% endif %}
+        <br><br>
+        <a href="/">Главная</a>
+    </body>
+</body>
+</html>

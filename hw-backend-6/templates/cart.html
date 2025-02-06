@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Корзина</title>
+</head>
+<body>
+    <h1>Корзина</h1>
+    {% if cart_flowers %}
+        <ul>
+            {% for flower in cart_flowers %}
+                <li>{{ flower.name }} - {{ flower.price }} тенге</li>
+            {% endfor %}
+        </ul>
+        <p>Итого: {{ total_price }} тенге</p>
+        {% if user %}
+        <form method="post" action="/purchased">
+            <button type="submit">Купить</button>
+        </form>
+        {% endif %}
+    {% else %}
+        <p>Корзина пуста.</p>
+    {% endif %}
+    <a href="/flowers">К цветам</a>
+    {% if user %}
+    <a href="/profile">Профиль</a>
+    {% endif %}
+    <br><br>
+    <a href="/">Главная</a>
+</body>
+</html>
