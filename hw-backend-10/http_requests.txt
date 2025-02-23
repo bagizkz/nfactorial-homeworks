@@ -1,0 +1,47 @@
+1. GET /index (HTTP/1.0)
+GET /index HTTP/1.0
+Host: example.com
+
+
+
+2. POST /api/login (HTTP/1.0)
+POST /api/login HTTP/1.0
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 29
+
+username=Alice&password=secret
+
+
+3. GET /home (HTTP/1.1)
+GET /home HTTP/1.1
+Host: example.com
+
+
+4. GET /data с Accept: application/json (HTTP/1.1)
+GET /data HTTP/1.1
+Host: example.com
+Accept: application/json
+
+
+5. POST /api/messages с JSON-телом (HTTP/1.1)
+POST /api/messages HTTP/1.1
+Host: example.com
+Content-Type: application/json
+Content-Length: 31
+
+{"username": "Alice", "msg": "Hello"}
+
+
+6. PUT /api/messages/42 с текстом (HTTP/1.1)
+PUT /api/messages/42 HTTP/1.1
+Host: example.com
+Content-Type: text/plain
+Content-Length: 15
+
+Updated message
+
+
+7. DELETE /api/messages/42 (HTTP/1.1)
+DELETE /api/messages/42 HTTP/1.1
+Host: example.com
