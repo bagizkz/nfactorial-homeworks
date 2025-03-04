@@ -1,0 +1,31 @@
+1. post-form-urlencoded
+POST /login HTTP/1.1
+Host: www.example.com
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 26
+
+username=admin&password=secret
+
+
+
+2. post-json
+POST /api/users HTTP/1.1
+Host: www.example.com
+Content-Type: application/json
+Content-Length: 38
+
+{"name": "John Doe", "email": "john.doe@example.com"}
+
+
+3. get-query-string
+GET /search?query=blue%20shoes HTTP/1.1
+Host: www.example.com
+
+
+
+4. transfer-encoding
+POST /api/chunked HTTP/1.1
+Host: www.example.com
+Transfer-Encoding: chunked
+
+7\r\nHello, \r\n6\r\nworld!\r\n0\r\n\r\n

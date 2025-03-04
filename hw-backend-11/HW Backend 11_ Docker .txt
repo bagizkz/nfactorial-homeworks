@@ -1,0 +1,56 @@
+﻿1-docker-run
+
+
+Установка docker:
+brew install --cask docker
+docker --version
+Запуск контейнера:
+docker run -d --name nfactorial-docker-run -p 9090:80 nginx:stable
+Вывод списка конейтенера:
+docker ps
+Запрос Curl:
+curl http://localhost:9090
+Остановка:
+docker stop nfactorial-docker-run
+Проверка:
+curl http://localhost:9090
+
+
+Вывод списка всех контейнкров:
+docker ps -a
+
+
+
+
+2-docker-mount
+Скачивание index.html:
+curl -o index.html https://nfactorial.school
+
+Запуск контейнера:
+docker run -d --name nfactorial-docker-mount -p 9999:80 \ -v $(pwd)/index.html:/usr/share/nginx/html/index.html
+Список контейнейров
+docker ps
+
+Просмотр логов nginx:
+docker logs nfactorial-docker-mount
+
+
+3-docker-exec
+Запуск контейнера:
+docker run -d --name nfactorial-docker-exec -p 9898:80 nginx:stable
+Вход в терминал контейнера:
+docker exec -it nfactorial-docker-exec /bin/sh
+ПРавка главной страницы:
+cat << EOF > /usr/share/nginx/html/index.html
+<h1>Hello, from container!</h1>
+EOF
+Выйти:
+exit
+
+
+Проверка запроса: 
+curl http://localhost:9898
+
+
+Просмотр логов:
+docker logs nfactorial-docker-exec
