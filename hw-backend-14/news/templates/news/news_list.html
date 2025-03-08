@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>News list</title>
+</head>
+<body>
+    <h1>News</h1>
+    <ul>
+        {% for item in news_with_likes %}
+            <li>
+                <a href="{% url 'news_detail' pk=item.news.pk %}">{{ item.news.title }}</a>
+                (Likes: {{ item.likes_count }})
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'news_add' %}">Add news</a>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ news.title }}</title>
+</head>
+<body>
+    <h1>{{ news.title }}</h1>
+    <p>{{ news.content }}</p>
+    <p>Data: {{ news.created_at }}</p>
+
+    <p>Likes: {{ news.like_set.count }}</p>
+    <a href="{% url 'add_like' pk=news.pk %}">like!</a>
+
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in comments %}
+            <li>{{ comment.content }} - {{ comment.created_at }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2>Add comment</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add</button>
+    </form>
+
+<br/><br/><a href="/news">< News list</a>
+
+</body>
+</html>
