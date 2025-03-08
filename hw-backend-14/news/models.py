@@ -1,8 +1,5 @@
 from django.db import models
 
-# Create your models here.
-
-
 class News(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
@@ -11,6 +8,9 @@ class News(models.Model):
     def __str__(self):
         return self.title
 
+    def has_comments(self):
+        return self.comment_set.exists()
+
 class Comment(models.Model):
     news = models.ForeignKey(News, on_delete=models.CASCADE)
     content = models.TextField()
@@ -18,8 +18,6 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.content
-    
-
 
 class Like(models.Model):
     news = models.ForeignKey(News, on_delete=models.CASCADE)

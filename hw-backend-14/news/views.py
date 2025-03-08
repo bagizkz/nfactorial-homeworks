@@ -16,7 +16,7 @@ def news_list(request):
 
 def news_detail(request, pk):
     news = get_object_or_404(News, pk=pk)
-    comments = news.comment_set.all()
+    comments = news.comment_set.all().order_by('-created_at')
 
     if request.method == 'POST':
         form = CommentForm(request.POST)
@@ -29,6 +29,7 @@ def news_detail(request, pk):
         form = CommentForm()
 
     return render(request, 'news/news_detail.html', {'news': news, 'comments': comments, 'form': form})
+
 
 def news_add(request):
     if request.method == 'POST':
