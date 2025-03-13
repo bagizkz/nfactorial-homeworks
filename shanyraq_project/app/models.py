@@ -1,7 +1,14 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, DateTime
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Float, DateTime, Table
 from sqlalchemy.orm import relationship
 from .database import Base
 from datetime import datetime
+
+favorites = Table(
+    "favorites",
+    Base.metadata,
+    Column("user_id", Integer, ForeignKey("users.id"), primary_key=True),
+    Column("shanyrak_id", Integer, ForeignKey("shanyraks.id"), primary_key=True),
+)
 
 class User(Base):
     __tablename__ = "users"
@@ -15,6 +22,7 @@ class User(Base):
 
     shanyraks = relationship("Shanyrak", back_populates="owner")
     comments = relationship("Comment", back_populates="author")
+    favorite_shanyraks = relationship("Shanyrak", secondary=favorites, back_populates="favorited_by")
 
 class Shanyrak(Base):
     __tablename__ = "shanyraks"
@@ -30,6 +38,7 @@ class Shanyrak(Base):
 
     owner = relationship("User", back_populates="shanyraks")
     comments = relationship("Comment", back_populates="shanyrak")
+    favorited_by = relationship("User", secondary=favorites, back_populates="favorite_shanyraks")
 
 class Comment(Base):
     __tablename__ = "comments"

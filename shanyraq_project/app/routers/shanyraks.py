@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from .. import models, schemas, security
 from ..database import SessionLocal
 from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from datetime import datetime
+from typing import Optional
 
 router = APIRouter(prefix="/shanyraks")
 
@@ -22,13 +23,13 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         payload = jwt.decode(token, security.SECRET_KEY, algorithms=[security.ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
-            raise HTTPException(status_code=401, detail="Could not validate credentials")
+            raise HTTPException(status_code=401, detail="Could not validate credentials", headers={"WWW-Authenticate": "Bearer"})
         user = db.query(models.User).filter(models.User.username == username).first()
         if user is None:
-            raise HTTPException(status_code=401, detail="User not found")
+            raise HTTPException(status_code=401, detail="User not found", headers={"WWW-Authenticate": "Bearer"})
         return user
     except jwt.JWTError:
-        raise HTTPException(status_code=401, detail="Could not validate credentials")
+        raise HTTPException(status_code=401, detail="Could not validate credentials", headers={"WWW-Authenticate": "Bearer"})
 
 @router.post("/", response_model=schemas.Shanyrak)
 def create_shanyrak(shanyrak: schemas.ShanyrakCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
@@ -48,9 +49,11 @@ def read_shanyrak(shanyrak_id: int, db: Session = Depends(get_db)):
 
 @router.patch("/{shanyrak_id}", response_model=schemas.Shanyrak)
 def update_shanyrak(shanyrak_id: int, shanyrak: schemas.ShanyrakCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    db_shanyrak = db.query(models.Shanyrak).filter(models.Shanyrak.id == shanyrak_id, models.Shanyrak.owner_id == current_user.id).first()
+    db_shanyrak = db.query(models.Shanyrak).filter(models.Shanyrak.id == shanyrak_id).first()
     if db_shanyrak is None:
-        raise HTTPException(status_code=404, detail="Shanyrak not found or you don't have permission")
+        raise HTTPException(status_code=404, detail="Shanyrak not found")
+    if db_shanyrak.owner_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Forbidden")
     for field, value in shanyrak.dict().items():
         setattr(db_shanyrak, field, value)
     db.commit()
@@ -59,9 +62,11 @@ def update_shanyrak(shanyrak_id: int, shanyrak: schemas.ShanyrakCreate, current_
 
 @router.delete("/{shanyrak_id}", response_model=schemas.Shanyrak)
 def delete_shanyrak(shanyrak_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    db_shanyrak = db.query(models.Shanyrak).filter(models.Shanyrak.id == shanyrak_id, models.Shanyrak.owner_id == current_user.id).first()
+    db_shanyrak = db.query(models.Shanyrak).filter(models.Shanyrak.id == shanyrak_id).first()
     if db_shanyrak is None:
-        raise HTTPException(status_code=404, detail="Shanyrak not found or you don't have permission")
+        raise HTTPException(status_code=404, detail="Shanyrak not found")
+    if db_shanyrak.owner_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Forbidden")
     db.delete(db_shanyrak)
     db.commit()
     return db_shanyrak
@@ -84,14 +89,16 @@ def read_comments(shanyrak_id: int, db: Session = Depends(get_db)):
     db_comments = db.query(models.Comment).filter(models.Comment.shanyrak_id == shanyrak_id).all()
     if not db_comments:
         return schemas.CommentList(comments=[])
-    schema_comments = [schemas.Comment.from_orm(db_comment) for db_comment in db_comments]
+    schema_comments = [schemas.Comment.model_validate(db_comment) for db_comment in db_comments]
     return schemas.CommentList(comments=schema_comments)
 
 @router.patch("/{shanyrak_id}/comments/{comment_id}", response_model=schemas.Comment)
 def update_comment(shanyrak_id: int, comment_id: int, comment: schemas.CommentCreate, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    db_comment = db.query(models.Comment).filter(models.Comment.id == comment_id, models.Comment.author_id == current_user.id, models.Comment.shanyrak_id == shanyrak_id).first()
+    db_comment = db.query(models.Comment).filter(models.Comment.id == comment_id, models.Comment.shanyrak_id == shanyrak_id).first()
     if db_comment is None:
-        raise HTTPException(status_code=404, detail="Comment not found or you don't have permission")
+        raise HTTPException(status_code=404, detail="Comment not found")
+    if db_comment.author_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Forbidden")
     for field, value in comment.dict().items():
         setattr(db_comment, field, value)
     db.commit()
@@ -100,9 +107,40 @@ def update_comment(shanyrak_id: int, comment_id: int, comment: schemas.CommentCr
 
 @router.delete("/{shanyrak_id}/comments/{comment_id}", response_model=schemas.Comment)
 def delete_comment(shanyrak_id: int, comment_id: int, current_user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
-    db_comment = db.query(models.Comment).filter(models.Comment.id == comment_id, models.Comment.author_id == current_user.id, models.Comment.shanyrak_id == shanyrak_id).first()
+    db_comment = db.query(models.Comment).filter(models.Comment.id == comment_id, models.Comment.shanyrak_id == shanyrak_id).first()
+    db_shanyrak = db.query(models.Shanyrak).filter(models.Shanyrak.id == shanyrak_id).first()
     if db_comment is None:
-        raise HTTPException(status_code=404, detail="Comment not found or you don't have permission")
+        raise HTTPException(status_code=404, detail="Comment not found")
+    if db_comment.author_id != current_user.id and db_shanyrak.owner_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Forbidden")
     db.delete(db_comment)
     db.commit()
     return db_comment
+
+@router.get("/", response_model=schemas.ShanyrakSearchResultList)
+def search_shanyraks(
+    limit: int = Query(10, ge=1, le=100),
+    offset: int = Query(0, ge=0),
+    type: Optional[str] = Query(None),
+    rooms_count: Optional[int] = Query(None),
+    price_from: Optional[int] = Query(None),
+    price_until: Optional[int] = Query(None),
+    db: Session = Depends(get_db),
+):
+    query = db.query(models.Shanyrak)
+
+    if type:
+        query = query.filter(models.Shanyrak.type == type)
+    if rooms_count:
+        query = query.filter(models.Shanyrak.rooms_count == rooms_count)
+    if price_from:
+        query = query.filter(models.Shanyrak.price >= price_from)
+    if price_until:
+        query = query.filter(models.Shanyrak.price <= price_until)
+
+    total = query.count()
+    shanyraks = query.offset(offset).limit(limit).all()
+    return schemas.ShanyrakSearchResultList(
+        total=total,
+        objects=[schemas.ShanyrakSearchResult.model_validate(shanyrak) for shanyrak in shanyraks],
+    )
