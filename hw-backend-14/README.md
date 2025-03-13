@@ -1,5 +1,4 @@
-1. HW Backend 14: Django p.2:
-
+#### HW Backend 14: Django p.2:
 Django-приложение "news".
 Модели: News, Comment и Like.
 Poetry для управления зависимостями.
@@ -10,8 +9,7 @@ Poetry для управления зависимостями.
 /news/<id>/like/: Добавление лайка <id>
 
 
-2. HW Backend 14: Django p.3:
-
+#### HW Backend 14: Django p.3:
 + Добавлен has_comments в News, который возвращает True, если у новости есть комментарии.
 + Написаны тесты для проверки метода has_comments на True или False.
 + Тест проверяет маршрут /news/ на вывод новостей в отсортированном порядке
@@ -20,7 +18,7 @@ Poetry для управления зависимостями.
 + News добавлена в админ панель.
 + Установлен и настроен django-debug-toolbar для отладки
 
-3. HW Backend 15: Django p.4:
+#### HW Backend 15: Django p.4:
 + Django ModelForm
 + `Class-Based View` для обновления новостей `get` и `post`
 + POST view обновляет существующую новость и перенаправляет на страницу новост
