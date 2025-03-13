@@ -1,18 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>News list</title>
-</head>
-<body>
-    <h1>News</h1>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>News list</h1>
     <ul>
         {% for item in news_with_likes %}
             <li>
-                <a href="{% url 'news_detail' pk=item.news.pk %}">{{ item.news.title }}</a>
-                (Likes: {{ item.likes_count }})
+                <a href="{% url 'news_detail' item.news.pk %}">{{ item.news.title }}</a> (likes: {{ item.likes_count }}) / 
+                <a href="{% url 'news_update' item.news.pk %}">Edit</a>
             </li>
         {% endfor %}
     </ul>
     <a href="{% url 'news_add' %}">Add news</a>
-</body>
-</html>
+{% endblock %}

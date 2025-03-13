@@ -1,31 +1,23 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ news.title }}</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block content %}
     <h1>{{ news.title }}</h1>
     <p>{{ news.content }}</p>
-    <p>Data: {{ news.created_at }}</p>
+    <p>Date: {{ news.created_at }}</p>
 
     <p>Likes: {{ news.like_set.count }}</p>
-    <a href="{% url 'add_like' pk=news.pk %}">like!</a>
-
+    <a href="{% url 'add_like' pk=news.pk %}">like!</a><br>
+<br>
+    <a href="{% url 'news_update' news.pk %}">Edit</a>
     <h2>Comments</h2>
     <ul>
         {% for comment in comments %}
-            <li>{{ comment.content }} - {{ comment.created_at }}</li>
+            <li>{{ comment.content }}</li>
         {% endfor %}
     </ul>
-
-    <h2>Add comment</h2>
     <form method="post">
         {% csrf_token %}
         {{ form.as_p }}
-        <button type="submit">Add</button>
+        <button type="submit">Add comment</button>
     </form>
-
-<br/><br/><a href="/news">< News list</a>
-
-</body>
-</html>
+{% endblock %}

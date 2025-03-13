@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import News, Comment, Like
 from .forms import NewsForm, CommentForm
+from django.views import View
 
 
 # Create your views here.
@@ -45,3 +46,18 @@ def add_like(request, pk):
     news = get_object_or_404(News, pk=pk)
     Like.objects.create(news=news)
     return redirect('news_detail', pk=pk)
+
+
+class NewsUpdateView(View):
+    def get(self, request, pk):
+        news = get_object_or_404(News, pk=pk)
+        form = NewsForm(instance=news)
+        return render(request, 'news/news_update.html', {'form': form, 'news': news})
+
+    def post(self, request, pk):
+        news = get_object_or_404(News, pk=pk)
+        form = NewsForm(request.POST, instance=news)
+        if form.is_valid():
+            form.save()
+            return redirect('news_detail', pk=pk)
+        return render(request, 'news/news_update.html', {'form': form, 'news': news})
