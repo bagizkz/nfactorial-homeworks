@@ -5,10 +5,13 @@
     <ul>
         {% for item in news_with_likes %}
             <li>
-                <a href="{% url 'news_detail' item.news.pk %}">{{ item.news.title }}</a> (likes: {{ item.likes_count }}) / 
-                <a href="{% url 'news_update' item.news.pk %}">Edit</a>
+                <a href="{% url 'news_detail' item.news.pk %}">{{ item.news.title }}</a> 
+                (likes: {{ item.likes_count }})
             </li>
         {% endfor %}
     </ul>
+    
+
     <a href="{% url 'news_add' %}">Add news</a>
+ 
 {% endblock %}
