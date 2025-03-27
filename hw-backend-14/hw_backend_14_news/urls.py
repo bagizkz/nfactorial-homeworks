@@ -29,6 +29,7 @@ urlpatterns = [
     path("accounts/", include("django.contrib.auth.urls")),
     path("news/sign-up/", SignUpView.as_view(), name="sign-up"),
     path('accounts/logout/', LogoutView.as_view(next_page='/news/'), name='logout'),
+    path('api/news/', include('news.api_urls')),
 ]
 
 

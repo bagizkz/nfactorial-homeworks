@@ -35,3 +35,17 @@ Poetry для управления зависимостями.
 + 4-author
 + 5-delete
 + 6-perms
+
+
+#### HW Backend 17: Django p.6
++ Установлен djangorestframework и добавлен в INSTALLED_APPS
++ Сериализатор NewsSerializer для модели News
++ API-вьюхи на основе APIView:
+- GET /api/news/ — список новостей
+- POST /api/news/ — добавление новой новости (через request.data, с валидацией)
+- GET /api/news/8/ — просмотр конкретной новости
+- DELETE /api/news/8/ — удаление новости по ID
++ API-маршруты вынесены в отдельный файл api_urls.py и подключены по адресу /api/news/
++ API работает отдельно от HTML-маршрутов /news/, нет конфликтов
++ Валидация и сериализация данных через ModelSerializer
+Автор новости передаётся вручную для теста
